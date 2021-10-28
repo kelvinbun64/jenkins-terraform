@@ -30,7 +30,7 @@ variable "image_family" {
 
 variable "network" {
   description = "network for given instance"
-  default = "vpc-us"
+  default = "default"
 }
 
 variable "credential" {
