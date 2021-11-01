@@ -49,10 +49,10 @@ resource "google_compute_subnetwork" "network_testing" {
 }
 
 
-resource "google_compute_network" "vpc_network_testing" {
-    name                           = "terraform-network"
-    auto_create_subnetworks        = "false"  
-}
+#resource "google_compute_network" "vpc_network_testing" {
+#    name                           = "terraform-network"
+#    auto_create_subnetworks        = "false"  
+#}
 
 #output "ip" {
  # value = "${google_compute_instance.default.name.network_interface}"
