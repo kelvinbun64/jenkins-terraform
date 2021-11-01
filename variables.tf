@@ -33,6 +33,11 @@ variable "network" {
   default = "default"
 }
 
+variable "ip_cidr_range" {
+  description = "network ip cidr"
+  default = "10.1.0.0/16"
+}
+
 variable "credential" {
   description = "credential file path different for different users"
   default = "angelic-cat-328204-e117a3630a1b.json"

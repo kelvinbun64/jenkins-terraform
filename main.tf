@@ -23,7 +23,8 @@ resource "google_compute_instance" "default" {
   }
 
   network_interface {
-    network = "${var.network}"
+    #network = "${var.network}"
+    subnetwork = google_compute_subnetwork.network_testing.name
 
     access_config {
       # nat_ip = "${google_compute_address.static.address}"
@@ -36,6 +37,21 @@ resource "google_compute_instance" "default" {
   }
 
   #metadata_startup_script  = "${file("./start.sh")}"
+}
+
+
+resource "google_compute_subnetwork" "network_testing" {
+  depends_on = [ google_compute_network.vpc_network_testing ]
+  name = "terraform-subnetwork-testing"
+  ip_cidr_range = "${var.ip_cidr_range}"
+  region = "us-central1"
+  network = google_compute_network.vpc_network_testing.name
+}
+
+
+resource "google_compute_network" "vpc_network_testing" {
+    name                           = "terraform-network"
+    auto_create_subnetworks        = "false"  
 }
 
 #output "ip" {
