@@ -3,7 +3,19 @@ data "google_compute_image" "image" {
   project = "${var.image_family}"
 }
 
-resource "google_compute_instance" "default" {
+data "google_compute_network" "vpc_network"{
+  name = "${var.network}"
+  project = "${var.project}"
+}
+
+data "google_compute_subnetwork" "subnetwork"{
+  name = "${var.subnetwork}"
+  project = "${var.project}"
+  region = "us-central1"
+
+}
+
+resource "google_compute_instance" "terraform-network" {
   for_each     = toset(var.instance_name)
   name         = each.value
   machine_type = "${var.machine_type}"
@@ -20,16 +32,23 @@ resource "google_compute_instance" "default" {
     initialize_params {
       image = "${data.google_compute_image.image.self_link}"
     }
-  }
+  } 
 
   network_interface {
     #network = "${var.network}"
-    subnetwork = google_compute_subnetwork.network_testing.name
+    network = "${data.google_compute_network.vpc_network.name}"
+    #subnetwork = "${var.subnetwork}"
+    subnetwork = "${data.google_compute_subnetwork.subnetwork.name}"
 
-    access_config {
+    #access_config {
       # nat_ip = "${google_compute_address.static.address}"
-    }
+    #}
   }
+
+ # resource "google_compute_network" "vpc_network" {
+ #   name                           = "terraform-network"
+  #  auto_create_subnetworks        = "false"  
+#}
 
   service_account {
     email = "${var.service_account}"
@@ -40,19 +59,14 @@ resource "google_compute_instance" "default" {
 }
 
 
-resource "google_compute_subnetwork" "network_testing" {
-  depends_on = [ google_compute_network.vpc_network_testing ]
-  name = "terraform-subnetwork-testing"
-  ip_cidr_range = "${var.ip_cidr_range}"
-  region = "us-central1"
-  network = google_compute_network.vpc_network_testing.name
-}
-
-
-#resource "google_compute_network" "vpc_network_testing" {
-#    name                           = "terraform-network"
-#    auto_create_subnetworks        = "false"  
+ #resource "google_compute_subnetwork" "network_testing" {
+  #depends_on = [ google_compute_network.vpc_network_testing ]
+  #name = "terraform-subnetwork-testing"
+  #p_cidr_range = "${var.ip_cidr_range}"
+  #region = "us-central1"
+  #network = google_compute_network.vpc_network_testing.name
 #}
+
 
 #output "ip" {
  # value = "${google_compute_instance.default.name.network_interface}"

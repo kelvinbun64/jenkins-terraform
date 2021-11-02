@@ -30,13 +30,20 @@ variable "image_family" {
 
 variable "network" {
   description = "network for given instance"
-  default = "default"
+  default = "terraform-network"
+}
+
+variable "subnetwork" {
+  description = "subnet for instance"
+  default = "terraform-network"
 }
 
 variable "ip_cidr_range" {
   description = "network ip cidr"
   default = "10.1.0.0/16"
 }
+
+
 
 variable "credential" {
   description = "credential file path different for different users"
